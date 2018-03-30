@@ -37,49 +37,29 @@
 ## to the 'armor_detection
 
 import rospy
-import cv2
-
-
-from SSDDeal import SSDDeal
-from sensor_msgs.msg import Image
 from icra_firefly.msg import ArmorDetection
-from cv_bridge import CvBridge
 
-class ArmorDetect(object):
-    def __init__(self):
-	self._cv_bridge = CvBridge()
-	
-	self._sub = rospy.Subscriber('image', Image, self.callback, queue_size=10)
-	self._pub = rospy.Publisher('armor_detection', ArmorDetection, queue_size=10)
-	print 'before ssd'
-	self._ssd = SSDDeal()
-	print 'after ssd'
-	self._threshold = 0.3
-
-    def callback(self, image_msg):
-	cv_image = self._cv_bridge.imgmsg_to_cv2(image_msg, "bgr8")
-	print 'wangchaobo sucker'
-	rclasses, rscores, rbboxes = self._ssd.Deal_image(cv_image)
-	print rclasses
-        for i in range(rbboxes.shape[0]):
-	    rscore = rscores[i]
-	    rclass = rclasses[i]
-	    rbbox  = rbboxes[i]
-	    rect_detection = ArmorDetection()
-	    if rclass == 1:
-		rect_detection.kind = 'Car'
-	    if rclass == 2:
-		rect_detection.kind = 'Armor'
-	    rect_detection.x1 = rbbox[0]
-	    rect_detection.y1 = rbbox[1]
-	    rect_detection.x2 = rbbox[2]
-	    rect_detection.y2 = rbbox[3] 
-            self._pub.publish(rect_detection)
-	
-    def main(self):
-	rospy.spin()
+def talker():
+    pub = rospy.Publisher('armor_detection', ArmorDetection, queue_size=100)
+    rospy.init_node('talker', anonymous=True)
+    rate = rospy.Rate(10) # 10hz
+    while not rospy.is_shutdown():
+        time_str = "Time %s" % rospy.get_time()
+        rospy.loginfo(time_str)
+	# make you code here 
+	# make a while loop
+	rect_detection = ArmorDetection()
+	rect_detection.kind = 'Armor'
+	rect_detection.x = 500.
+	rect_detection.y = 60.
+	rect_detection.w = 10.
+	rect_detection.h = 10.
+        pub.publish(rect_detection)
+	# where you code ends
+        rate.sleep()
 
 if __name__ == '__main__':
-    rospy.init_node('armor_detection_demo')
-    armor_detection = ArmorDetect()
-    armor_detection.main()
+    try:
+        talker()
+    except rospy.ROSInterruptException:
+        pass
