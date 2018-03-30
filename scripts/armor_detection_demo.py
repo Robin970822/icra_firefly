@@ -50,10 +50,10 @@ def talker():
 	# make a while loop
 	rect_detection = ArmorDetection()
 	rect_detection.kind = 'Armor'
-	rect_detection.x = 500.
-	rect_detection.y = 60.
-	rect_detection.w = 10.
-	rect_detection.h = 10.
+	rect_detection.x1 = 500.
+	rect_detection.y1 = 60.
+	rect_detection.x2 = 10.
+	rect_detection.y2 = 10.
         pub.publish(rect_detection)
 	# where you code ends
         rate.sleep()
