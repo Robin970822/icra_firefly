@@ -4,11 +4,14 @@
 #include <icra_firefly/ArmorDetection.h>
 #include <cstring>
 
-
 #include "MoveControl.h"
+#include "AutoPID.h"
 
 #define epsilon 0.1
 
+MoveControl MV;
+AutoPID PID_u_d = AutoPID(0.05, 0.005, 0.00005, 1.0/1000.0, 240);
+AutoPID PID_r_l = AutoPID(0.05, 0.005, 0.00005, 1.0/1000.0, 320);
 
 // 回调函数
 void armor_detection_Callback(const icra_firefly::ArmorDetection& armor_detection)
@@ -30,6 +33,14 @@ void armor_detection_Callback(const icra_firefly::ArmorDetection& armor_detectio
         cmd += "\tshoot\n";
     }
     std::cout << cmd;
+    PID_u_d.uk=PID_u_d.pid_control(y*240);
+	PID_r_l.uk=PID_r_l.pid_control(x*320);
+	MV.Up_Down(PID_u_d.uk);
+	MV.Right_Left_Rotation(-PID_r_l.uk);
+    if(MV.Send_Message()==false) //xia mian de bu fen xu yao xiong huan
+	{
+		printf("\nPort Lost \n");
+	}
 }
 
 int main(int argc, char *argv[])
@@ -43,6 +54,6 @@ int main(int argc, char *argv[])
     ros::Subscriber sub = nh.subscribe("armor_detection", 10, armor_detection_Callback);
     // 进入循环
     ros::spin();
-
+    
     return 0;
 }
