@@ -17,10 +17,10 @@ class MoveControl
 		bool Send_Message();
 		bool Attack_Mode_Change();
 		bool Attack(int n);
-		bool Forward_Back(int f_b);
-		bool Right_Left(int r_l);
-		bool Up_Down(int u_d);
-		bool Right_Left_Rotation(int r_l_R);
+		bool Forward_Back(float f_b);
+		bool Right_Left(float r_l);
+		bool Up_Down(float u_d);
+		bool Right_Left_Rotation(float r_l_R);
 	private:
 		SerialPort SP;		
 };
