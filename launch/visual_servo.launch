@@ -1,0 +1,18 @@
+<launch>
+  <node name="fake_talker" pkg="icra_firefly" type="fake_talker.py">
+  </node>
+  <node name="visual_servo_node" pkg="icra_firefly" type="visual_servo_node" output="screen">
+    <param name="width"  value="300" />
+    <param name="height" value="300" />
+
+    <param name="ud_p"   value="5.00" />
+    <param name="ud_i"   value="0.01" />
+    <param name="ud_d"   value="1.00" />
+
+    <param name="rl_p"   value="5.00" />
+    <param name="rl_i"   value="0.01" />
+    <param name="rl_d"   value="1.00" />
+
+    <param name="ts"     value="1000" />
+  </node>
+</launch>
