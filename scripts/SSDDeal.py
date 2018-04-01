@@ -14,7 +14,7 @@ class SSDDeal:
     def __init__(self):
         self.isess = tf.InteractiveSession()
         self.num_classes = 3
-        self.ckpt_filename = 'ckpts/model.ckpt-38804'
+        self.ckpt_filename = '/home/hanxy/catkin_ws/src/icra_firefly/scripts/ckpts/model.ckpt-38804'
         params = ssd_vgg_300.SSDNet.default_params._replace(num_classes=self.num_classes)
         ssd = ssd_vgg_300.SSDNet(params)
         self.net_shape = (300, 300)
