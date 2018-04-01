@@ -43,11 +43,15 @@ from icra_firefly.msg import ArmorDetection
 def talker():
     pub = rospy.Publisher('armor_detection', ArmorDetection, queue_size=10)
     rospy.init_node('fake_talker', anonymous=True)
-    rate = rospy.Rate(100) # 100hz
+    rate = rospy.Rate(71) # 100hz
     while not rospy.is_shutdown():
-        rospy.loginfo(hello_str)
         fake_talker = ArmorDetection()
         fake_talker.kind = "Fake News"
+        fake_talker.x1 = 0.5
+        fake_talker.x2 = 0.5
+        fake_talker.y1 = 0.5
+        fake_talker.y2 = 0.5
+        pub.publish(fake_talker)
         rate.sleep()
 
 if __name__ == '__main__':
