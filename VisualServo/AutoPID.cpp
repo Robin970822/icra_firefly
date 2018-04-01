@@ -18,7 +18,7 @@ AutoPID::~AutoPID()
 }
 float AutoPID::pid_control(float y)
 {
-	ek=_center-y;
+	ek=0.5-y;
 	uk=uk_1+(kp+ki*ts+kd/ts)*ek-(kp+2*kd/ts)*ek_1+kd*ek_2/ts;
 	uk_1=uk;
 	ek_1=ek;
