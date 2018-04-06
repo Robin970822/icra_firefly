@@ -80,7 +80,7 @@ bool SerialPort::openPort(int speed)
     	}
     	if(flag==1)
     	{
-    		fprintf(stderr,"\nPort %s Open Succeed and Baudrate is Set at %d!\n","USB0",ss_set.baud_base/ss_set.custom_divisor);
+    		fprintf(stderr,"\nPort %s Open Succeed and Baudrate is Set at %d!\n",portname,ss_set.baud_base/ss_set.custom_divisor);
     		return true;
     	}
     	else

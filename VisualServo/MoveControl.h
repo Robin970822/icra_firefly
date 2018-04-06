@@ -1,9 +1,12 @@
 #include "SerialPort.h"
+#include <cstring>
+#include <iostream>
 
 class MoveControl
 {
 	public:
 		MoveControl();
+		MoveControl(std::string portName, int baud);
 		~MoveControl();
 
 		bool flag;

@@ -14,5 +14,8 @@
     <param name="rl_d"   value="0.06" />
 
     <param name="ts"     value="35" />
+
+    <param name="serial_name" value="/dev/ttyUSB0" />
+    <param name="baud" value="100000" />
   </node>
 </launch>

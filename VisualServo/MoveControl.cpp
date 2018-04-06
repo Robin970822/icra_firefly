@@ -22,6 +22,23 @@ MoveControl::MoveControl()
 	S2=1;
 }
 
+MoveControl::MoveControl(std::string portName, int baud)
+{
+	flag=false;
+	if(SP.init_8n1(portName.c_str())&&SP.openPort(baud)==true)
+	{
+		printf("\nSystem is Online\n" );	
+		flag=true;
+	}
+	setbuf(stdin,NULL);
+	CH0=1024;
+	CH1=1024;
+	CH2=1024;
+	CH3=1024;
+	S1=3;
+	S2=1;
+}
+
 MoveControl::~MoveControl()
 {
 	SP.closePort();

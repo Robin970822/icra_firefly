@@ -25,7 +25,18 @@ VisualServo::VisualServo()
 
     PID_u_d = AutoPID(Up_Down_P, Up_Down_I, Up_Down_D, ts/1000.0, 0.5);
     PID_r_l = AutoPID(Right_Left_P, Right_Left_I, Right_Left_D, ts/1000.0, 0.5);
+
+    std::string portName;
+    int baud;
     
+    ros::param::param("~baud", baud, 100000);
+    if (!ros::param::get("~serial_name", portName))
+    {
+        portName = "/dev/ttyUSB0";
+    }
+
+    ROS_INFO("serial_name: %s baud: %d", portName.c_str(), baud);
+    //MV = MoveControl(portName, baud);
 }
 
 VisualServo::~VisualServo(){}
@@ -61,11 +72,10 @@ void VisualServo::armor_detection_Callback(const icra_firefly::ArmorDetection& a
 
         MV.Up_Down(PID_u_d.uk);
         MV.Right_Left_Rotation(-PID_r_l.uk);
-        MV.Send_Message();
     }
 
     
-    if(MV.Send_Message() == false) //xia mian de bu fen xu yao xiong huan
+    if(MV.Send_Message() == false) //
 	{
 		ROS_ERROR("Port Lost");
 	}
