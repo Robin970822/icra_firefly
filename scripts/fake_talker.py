@@ -38,10 +38,12 @@
 
 import rospy
 from std_msgs.msg import String
+from geometry_msgs.msg import Twist
 from icra_firefly.msg import ArmorDetection
 
 def talker():
     pub = rospy.Publisher('armor_detection', ArmorDetection, queue_size=10)
+    cmd_pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
     rospy.init_node('fake_talker', anonymous=True)
     rate = rospy.Rate(71) # 100hz
     while not rospy.is_shutdown():
@@ -52,6 +54,10 @@ def talker():
         fake_talker.y1 = 0.5
         fake_talker.y2 = 0.5
         pub.publish(fake_talker)
+
+	fake_cmd = Twist()
+	fake_cmd.linear.z = 0.1
+	cmd_pub.publish(fake_cmd)
         rate.sleep()
 
 if __name__ == '__main__':
