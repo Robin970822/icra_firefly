@@ -1,7 +1,8 @@
 <launch>
+  <node name="fake_talker" pkg="icra_firefly" type="fake_talker.py"/>
   <node name="move_control_node" pkg="icra_firefly" type="move_control_node" output="screen">
-    <param name="linear_x_coef"   value="0.5" />
+    <param name="linear_x_coef"   value="0.1" />
     <param name="linear_y_coef"   value="0.0" />
-    <param name="angular_z_coef"   value="1.0" />
+    <param name="angular_z_coef"   value="-1.0" />
   </node>
 </launch>
