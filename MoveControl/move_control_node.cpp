@@ -54,8 +54,9 @@ void GimbalCallback(const icra_firefly::GimbalControl& gimbal)
 
 int main(int argc, char **argv)
 {
+    printf("move control node statr\n");
     //初始化ROS当前节点为car_contr
-    ros::init(argc, argv, "summer_car_contr");
+    ros::init(argc, argv, "move_control_node");
     ros::NodeHandle nh;
     //订阅的是/cmd_vel话题，如果速度不够快的话就会缓存1000条消息，当有新消息到来时，会调用cmd_vel_Callback函数，控制底盘运动
     ros::Subscriber sub_cmd_vel_ = nh.subscribe("cmd_vel", 1000, CmdVelCallback);

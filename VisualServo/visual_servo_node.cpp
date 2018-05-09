@@ -97,7 +97,7 @@ void VisualServo::Run()
 
 int main(int argc, char *argv[])
 {
-    printf("move control node start\n");
+    printf("visual servo node start\n");
     // 初始化当前结点visual_servo_node
     ros::init(argc, argv, "visual_servo_node");
  
