@@ -1,11 +1,12 @@
 #include "ros/ros.h"
-#include  <geometry_msgs/Twist.h>
+#include <geometry_msgs/Twist.h>
+#include <icra_firefly/GimbalControl.h>
 #include "MoveControl.h"
 
 #define PI 3.1415926
 MoveControl MV;
 
-void cmd_vel_Callback(const geometry_msgs::Twist& cmd_vel)
+void CmdVelCallback(const geometry_msgs::Twist& cmd_vel)
 {
     if(cmd_vel.linear.z == 0)
     {
@@ -31,10 +32,24 @@ void cmd_vel_Callback(const geometry_msgs::Twist& cmd_vel)
         MV.Right_Left_Rotation(z);
     }
 
-    if(MV.Send_Message() == false) //xia mian de bu fen xu yao xun huan
+    if(MV.Send_Message() == false)
     {
         ROS_ERROR("Port Lost");
     }
+}
+
+void GimbalCallback(const icra_firefly::GimbalControl& gimbal)
+{
+    double u_d = gimbal.u_d;
+    double r_l = gimbal.r_l;
+
+    MV.Up_Down(u_d);
+    MV.Right_Left(r_l);
+
+    if(MV.Send_Message() == false)
+    {
+        ROS_ERROR("Gimbal Lost");
+    }    
 }
 
 int main(int argc, char **argv)
@@ -42,8 +57,10 @@ int main(int argc, char **argv)
     //初始化ROS当前节点为car_contr
     ros::init(argc, argv, "summer_car_contr");
     ros::NodeHandle nh;
-    //订阅的是chatter话题，如果速度不够快的话就会缓存1000条消息，当有新消息到来时，会调用cmd_vel_Callback函数
-    ros::Subscriber sub = nh.subscribe("cmd_vel", 1000, cmd_vel_Callback);
+    //订阅的是/cmd_vel话题，如果速度不够快的话就会缓存1000条消息，当有新消息到来时，会调用cmd_vel_Callback函数，控制底盘运动
+    ros::Subscriber sub_cmd_vel_ = nh.subscribe("cmd_vel", 1000, CmdVelCallback);
+
+    ros::Subscriber sub_gimbal_ctrl = nh.subscribe("gimbal", 1000, GimbalCallback);
     //进入循环，可以尽快调用消息的回调函数，并且可以退出
     ros::spin();
 

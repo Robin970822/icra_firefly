@@ -3,7 +3,7 @@
 
 VisualServo::VisualServo()
 {
-    gim_ctrl_pub = nh.advertise<icra_firefly::GimbalControl>("gimbal", 30)
+    gim_ctrl_pub = nh.advertise<icra_firefly::GimbalControl>("gimbal", 30);
     
     // 处理图片大小
     ros::param::param("~width", width, 300.0);
@@ -72,10 +72,10 @@ void VisualServo::ArmorDetectionCallback(const icra_firefly::ArmorDetection& arm
         ROS_INFO("Width:%lf Height:%lf", width, height);
         ROS_INFO("P:%lf I:%lf D:%lf", PID_u_d.kp, PID_u_d.ki, PID_u_d.kd);
         
-        icra_firefly::GimbalControl gim_ctrl;
-        gim_ctrl.u_d = PID_u_d.uk;
-        gim_ctrl.r_l = PID_r_l.uk;
-        gim_ctrl_pub.publish(gim_ctrl);   
+        icra_firefly::GimbalControl gimbal;
+        gimbal.u_d = PID_u_d.uk;
+        gimbal.r_l = PID_r_l.uk;
+        gim_ctrl_pub.publish(gimbal);   
         // MV.Up_Down(PID_u_d.uk);
         // MV.Right_Left_Rotation(-PID_r_l.uk);
     }
