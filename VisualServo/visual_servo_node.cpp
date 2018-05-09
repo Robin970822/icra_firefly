@@ -3,6 +3,8 @@
 
 VisualServo::VisualServo()
 {
+    gim_ctrl_pub = nh.advertise<icra_firefly::GimbalControl>("gimbal", 30)
+    
     // 处理图片大小
     ros::param::param("~width", width, 300.0);
     ros::param::param("~height", height, 300.0);
@@ -42,7 +44,7 @@ VisualServo::VisualServo()
 VisualServo::~VisualServo(){}
 
 // 回调函数
-void VisualServo::armor_detection_Callback(const icra_firefly::ArmorDetection& armor_detection)
+void VisualServo::ArmorDetectionCallback(const icra_firefly::ArmorDetection& armor_detection)
 {
     std::string cmd = "";
     cmd += armor_detection.kind;
@@ -69,16 +71,28 @@ void VisualServo::armor_detection_Callback(const icra_firefly::ArmorDetection& a
         ROS_INFO("UD:%lf RL:%lf x:%lf y:%lf", PID_u_d.uk, PID_r_l.uk, x, y);
         ROS_INFO("Width:%lf Height:%lf", width, height);
         ROS_INFO("P:%lf I:%lf D:%lf", PID_u_d.kp, PID_u_d.ki, PID_u_d.kd);
-
-        MV.Up_Down(PID_u_d.uk);
-        MV.Right_Left_Rotation(-PID_r_l.uk);
+        
+        icra_firefly::GimbalControl gim_ctrl;
+        gim_ctrl.u_d = PID_u_d.uk;
+        gim_ctrl.r_l = PID_r_l.uk;
+        gim_ctrl_pub.publish(gim_ctrl);   
+        // MV.Up_Down(PID_u_d.uk);
+        // MV.Right_Left_Rotation(-PID_r_l.uk);
     }
 
     
-    if(MV.Send_Message() == false) //
-	{
-		ROS_ERROR("Port Lost");
-	}
+    // if(MV.Send_Message() == false) //
+	// {
+	// 	ROS_ERROR("Port Lost");
+	// }
+}
+// Run函数
+void VisualServo::Run()
+{
+    // 订阅 armor_detection
+    sub_armor_detection = nh.subscribe("armor_detection", 10, &VisualServo::ArmorDetectionCallback, this);
+    // 开始循环
+    ros::spin();
 }
 
 int main(int argc, char *argv[])
@@ -86,13 +100,10 @@ int main(int argc, char *argv[])
     printf("move control node start\n");
     // 初始化当前结点visual_servo_node
     ros::init(argc, argv, "visual_servo_node");
-    // 创建一个结点句柄
-    ros::NodeHandle nh;
+ 
     VisualServo visualServo;
-    // 订阅 armor_detection 
-    ros::Subscriber sub = nh.subscribe("armor_detection", 10, &VisualServo::armor_detection_Callback, &visualServo);
-    // 进入循环
-    ros::spin();
+
+    visualServo.Run();
     
     return 0;
 }
