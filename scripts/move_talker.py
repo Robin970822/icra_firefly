@@ -42,15 +42,22 @@ from geometry_msgs.msg import Twist
 
 
 def talker():
-    cmd_pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
+    cmd_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
     rospy.init_node('fake_talker', anonymous=True)
-    rate = rospy.Rate(50) # 100hz
+    rate = rospy.Rate(1) # 100hz
     while not rospy.is_shutdown():
-        fake_cmd = Twist()
-        fake_cmd.linear.x = 1.0
-        cmd_pub.publish(fake_cmd)
+        move_cmd = Twist()
+        line = raw_input(">")
+        if(line == 'w'):
+            move_cmd.linear.x = 1.0
+        if(line == 's'):
+            move_cmd.linear.x = -1.0
+        if(line == 'a'):
+            move_cmd.linear.y = 1.0
+        if(line == 'd'):
+            move_cmd.linear.y = -1.0
+        cmd_pub.publish(move_cmd)
         rate.sleep()
-
 
 if __name__ == '__main__':
     try:
