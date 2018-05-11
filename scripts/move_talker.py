@@ -49,13 +49,13 @@ def talker():
         move_cmd = Twist()
         line = raw_input(">")
         if(line == 'w'):
-            move_cmd.linear.x = 1.0
+            move_cmd.linear.x = 0.1
         if(line == 's'):
-            move_cmd.linear.x = -1.0
+            move_cmd.linear.x = -0.1
         if(line == 'a'):
-            move_cmd.linear.y = 1.0
+            move_cmd.linear.y = 0.1
         if(line == 'd'):
-            move_cmd.linear.y = -1.0
+            move_cmd.linear.y = -0.1
         cmd_pub.publish(move_cmd)
         rate.sleep()
 
