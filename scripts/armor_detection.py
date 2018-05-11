@@ -17,18 +17,18 @@ while(cap.isOpened()):
         rclasses, rscores, rbboxes = _ssd.process_image(frame)
         print rclasses
         for i in range(rbboxes.shape[0]):
-	    rscore = rscores[i]
-	    rclass = rclasses[i]
-	    rbbox  = rbboxes[i]
-	    rect_detection = ArmorDetection()
-	    if rclass == 1:
-	        rect_detection.kind = 'Car'
-	    if rclass == 2:
-	        rect_detection.kind = 'Armor'
-	    rect_detection.y1 = rbbox[0]
-	    rect_detection.x1 = rbbox[1]
-	    rect_detection.y2 = rbbox[2]
-	    rect_detection.x2 = rbbox[3] 
+            rscore = rscores[i]
+            rclass = rclasses[i]
+            rbbox = rbboxes[i]
+            rect_detection = ArmorDetection()
+            if rclass == 1:
+                rect_detection.kind = 'Car'
+            if rclass == 2:
+                rect_detection.kind = 'Armor'
+            rect_detection.y1 = rbbox[0]
+            rect_detection.x1 = rbbox[1]
+            rect_detection.y2 = rbbox[2]
+            rect_detection.x2 = rbbox[3]
             _pub.publish(rect_detection)
         cv2.waitKey(20)
     else:
@@ -36,4 +36,3 @@ while(cap.isOpened()):
 
 cap.release()
 cv2.destroyAllWindows()
-            

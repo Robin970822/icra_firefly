@@ -6,9 +6,9 @@
 #define PI 3.1415926
 MoveControl MV;
 
-void CmdVelCallback(const geometry_msgs::Twist& cmd_vel)
+void CmdVelCallback(const geometry_msgs::Twist &cmd_vel)
 {
-    if(cmd_vel.linear.z == 0)
+    if (cmd_vel.linear.z == 0)
     {
         double linear_x = cmd_vel.linear.x;
         double linear_y = cmd_vel.linear.y;
@@ -32,13 +32,13 @@ void CmdVelCallback(const geometry_msgs::Twist& cmd_vel)
         MV.Right_Left_Rotation(z);
     }
 
-    if(MV.Send_Message() == false)
+    if (MV.Send_Message() == false)
     {
         ROS_ERROR("Port Lost");
     }
 }
 
-void GimbalCallback(const icra_firefly::GimbalControl& gimbal)
+void GimbalCallback(const icra_firefly::GimbalControl &gimbal)
 {
     double u_d = gimbal.u_d;
     double r_l = gimbal.r_l;
@@ -46,10 +46,10 @@ void GimbalCallback(const icra_firefly::GimbalControl& gimbal)
     MV.Up_Down(u_d);
     MV.Right_Left(r_l);
 
-    if(MV.Send_Message() == false)
+    if (MV.Send_Message() == false)
     {
         ROS_ERROR("Gimbal Lost");
-    }    
+    }
 }
 
 int main(int argc, char **argv)
@@ -66,5 +66,4 @@ int main(int argc, char **argv)
     ros::spin();
 
     return 0;
-
 }

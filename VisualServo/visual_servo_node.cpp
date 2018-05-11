@@ -1,10 +1,9 @@
 #include "visual_servo_node.h"
 
-
 VisualServo::VisualServo()
 {
     gim_ctrl_pub = nh.advertise<icra_firefly::GimbalControl>("gimbal", 30);
-    
+
     // 处理图片大小
     ros::param::param("~width", width, 300.0);
     ros::param::param("~height", height, 300.0);
@@ -25,12 +24,12 @@ VisualServo::VisualServo()
     ros::param::param("~ts", ts, 100.0);
     ROS_INFO("ts: %lf", ts);
 
-    PID_u_d = AutoPID(Up_Down_P, Up_Down_I, Up_Down_D, ts/1000.0, 0.5);
-    PID_r_l = AutoPID(Right_Left_P, Right_Left_I, Right_Left_D, ts/1000.0, 0.5);
+    PID_u_d = AutoPID(Up_Down_P, Up_Down_I, Up_Down_D, ts / 1000.0, 0.5);
+    PID_r_l = AutoPID(Right_Left_P, Right_Left_I, Right_Left_D, ts / 1000.0, 0.5);
 
     std::string portName;
     int baud;
-    
+
     ros::param::param("~baud", baud, 100000);
     if (!ros::param::get("~serial_name", portName))
     {
@@ -41,10 +40,10 @@ VisualServo::VisualServo()
     //MV = MoveControl(portName, baud);
 }
 
-VisualServo::~VisualServo(){}
+VisualServo::~VisualServo() {}
 
 // 回调函数
-void VisualServo::ArmorDetectionCallback(const icra_firefly::ArmorDetection& armor_detection)
+void VisualServo::ArmorDetectionCallback(const icra_firefly::ArmorDetection &armor_detection)
 {
     std::string cmd = "";
     cmd += armor_detection.kind;
@@ -71,20 +70,19 @@ void VisualServo::ArmorDetectionCallback(const icra_firefly::ArmorDetection& arm
         ROS_INFO("UD:%lf RL:%lf x:%lf y:%lf", PID_u_d.uk, PID_r_l.uk, x, y);
         ROS_INFO("Width:%lf Height:%lf", width, height);
         ROS_INFO("P:%lf I:%lf D:%lf", PID_u_d.kp, PID_u_d.ki, PID_u_d.kd);
-        
+
         icra_firefly::GimbalControl gimbal;
         gimbal.u_d = PID_u_d.uk;
         gimbal.r_l = PID_r_l.uk;
-        gim_ctrl_pub.publish(gimbal);   
+        gim_ctrl_pub.publish(gimbal);
         // MV.Up_Down(PID_u_d.uk);
         // MV.Right_Left_Rotation(-PID_r_l.uk);
     }
 
-    
     // if(MV.Send_Message() == false) //
-	// {
-	// 	ROS_ERROR("Port Lost");
-	// }
+    // {
+    // 	ROS_ERROR("Port Lost");
+    // }
 }
 // Run函数
 void VisualServo::Run()
@@ -100,10 +98,10 @@ int main(int argc, char *argv[])
     printf("visual servo node start\n");
     // 初始化当前结点visual_servo_node
     ros::init(argc, argv, "visual_servo_node");
- 
+
     VisualServo visualServo;
 
     visualServo.Run();
-    
+
     return 0;
 }

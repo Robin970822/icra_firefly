@@ -20,7 +20,8 @@ def bboxes_draw_on_img(img, classes, scores, bboxes, colors, thickness=2):
 
 if __name__ == '__main__':
     ssd = SSDDeal()
-    colors_tableau = [(255, 255, 255), (31, 119, 180), (174, 199, 232), (255, 127, 14)]
+    colors_tableau = [(255, 255, 255), (31, 119, 180),
+                      (174, 199, 232), (255, 127, 14)]
     for xstep in range(300, 40000):
         num = str(xstep)
         num = num.zfill(4)
@@ -30,6 +31,7 @@ if __name__ == '__main__':
 
         # Draw results.
         img_bboxes = np.copy(img)
-        bboxes_draw_on_img(img_bboxes, rclasses, rscores, rbboxes, colors_tableau, thickness=2)
+        bboxes_draw_on_img(img_bboxes, rclasses, rscores,
+                           rbboxes, colors_tableau, thickness=2)
         cv2.imshow("xx", img_bboxes)
         cv2.waitKey(20)

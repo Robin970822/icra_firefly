@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
@@ -18,7 +16,7 @@ def callback(image_msg):
     for i in range(rbboxes.shape[0]):
         rscore = rscores[i]
         rclass = rclasses[i]
-        rbbox  = rbboxes[i]
+        rbbox = rbboxes[i]
         rect_detection = ArmorDetection()
         if rclass == 1:
             rect_detection.kind = 'Car'
@@ -27,7 +25,7 @@ def callback(image_msg):
         rect_detection.y1 = rbbox[0]
         rect_detection.x1 = rbbox[1]
         rect_detection.y2 = rbbox[2]
-        rect_detection.x2 = rbbox[3] 
+        rect_detection.x2 = rbbox[3]
         _pub.publish(rect_detection)
         print rscore
     cv2.waitKey(20)
@@ -40,6 +38,7 @@ def listener():
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
+
 
 if __name__ == '__main__':
     _ssd = SSDDeal()

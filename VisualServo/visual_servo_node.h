@@ -10,17 +10,17 @@
 
 #define epsilon 0.1
 
-class VisualServo{
-    public:
-
+class VisualServo
+{
+  public:
     VisualServo();
 
     ~VisualServo();
 
     void Run();
-    void ArmorDetectionCallback(const icra_firefly::ArmorDetection& armor_detection);
+    void ArmorDetectionCallback(const icra_firefly::ArmorDetection &armor_detection);
 
-    private:
+  private:
     // MoveControl MV;
     ros::NodeHandle nh;
     ros::Subscriber sub_armor_detection;

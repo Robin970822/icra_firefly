@@ -1,109 +1,72 @@
 <?xml version="1.0"?>
-<!-- SlAM建图启动文件，获取激光数据和坐标转换，构建地图并发布--> 
-<launch> 
- 
-<!-- 启动激光雷达 这个文件其实也是启动了激光雷达的那个节点--> 
-<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
-
-
-<!-- 启动hector_mapping节点用于建图-->
-    <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen">  
-<!--============================= 配置hector_mapping节点的各项参数=========================== -->
-    <!-- **************************************************Frame names **************************-->  
-    <!-- 确定scanmatcher到map的转换是否发布到TF 选择发送 -->  
-    <param name="pub_map_odom_transform" value="ture"/> 
- 
-     <!-- map坐标系的名称 --> 
-    <param name="map_frame" value="map" />  
-
-    <!--机器人基本坐标系的名称。这是用于定位和用于激光扫描数据的变换 -->
-    <param name="base_frame" value="base_link" />  
-
-    <!-- 里程坐标系的名称 > 
-   <param name="odom_frame" value="odom" /--> 
-  <param name="odom_frame" value="base_link" />  
-   
-     
-
-      
-    <!--************************************************** Tf use *******************************-->  
-    <!--是否使用ＴＦ转换  这里的转化应该是map->base_link的转换-->
-    <param name="use_tf_scan_transformation" value="ture"/>  
-    <param name="use_tf_pose_start_estimate" value="false"/> 
-    <!--确定scanmatcher到map的转换是否发布到TF.坐标名通过tf_map_scanmatch_transform_frame_name参数确定 --> 
-    <param name="pub_map_scanmatch_transform" value="false" />  
-    <param name="tf_map_scanmatch_transform_frame_name" value="scanmat_frame" /> 
-      
-    <!--************************************************** Map size / start point ********************--> 
-   <!-- 地图分辨率[m]。 这是网格单元边缘的长度 -->
-    <param name="map_resolution" value="0.03"/> 
-
-     <!-- 地图的大小[每个轴的单元格数量]。 地图是正方形的并且具有（map_size * map_size）网格单元 -->  
-    <param name="map_size" value="512"/>  
-
-     <!-- map的原点[0.0，1.0]在x轴上相对于网格图的位置。 0.5在中间 --> 
-    <param name="map_start_x" value="0.3"/> 
-
-     <!-- map的原点[0.0，1.0]在y轴上相对于网格图的位置。 0.5在中间 -->  
-    <param name="map_start_y" value="0.5" /> 
-
-     <!-- 相对于激光扫描器框架的最小高度[m]，用于系统使用的激光扫描端点。 低于此值的扫描端点将被忽略 -->    
-    <param name="laser_z_min_value" value = "-1.0" />
-
-     <!-- 相对于激光扫描器框架的最大高度[m]，用于系统使用的激光扫描端点。 高于此值的扫描端点将被忽略 -->   
-    <param name="laser_z_max_value" value = "1.0" /> 
-
-     <!-- 地图多分辨率网格级数 -->  
-    <param name="map_multi_res_levels" value="2" /> 
-
- 
-     <!-- 地图发布周期 -->       
-    <param name="map_pub_period" value="2" />  
-
-    <!-- 系统使用的激光扫描端点的最小距离[m]。 距离此值更近的扫描端点将被忽略。 -->
-    <param name="laser_min_dist" value="0.2" /> 
- 
-     <!-- 系统使用的激光扫描端点的最大距离[m]。 超出此值的扫描端点将被忽略。 --> 
-    <param name="laser_max_dist" value="5.0" /> 
-
-      <!-- 通过ROS_INFO处理每个激光扫描的输出时序信息 -->  
-    <param name="output_timing" value="false" />  
-      
-    <!--************************************************** Map update parameters **************************************************-->  
-    <!-- 用于更新范围[0.0,1.0]中的空闲单元格的地图更新修改器。 值0.5表示没有变化。 --> 
-    <param name="update_factor_free" value="0.4"/> 
-
-    <!-- 用于在范围[0.0,1.0]中更新被占用单元的地图更新修改器。 值0.5表示没有变化。 -->  
-    <param name="update_factor_occupied" value="0.7" />
-
-     <!-- 地图更新的长度阀值，单位m。在一次更新后，平台必须移动这个参数代表的值的距离后，才能再次更新地图。 -->     
-    <param name="map_update_distance_thresh" value="0.2"/> 
-   
- <!-- 地图更新的角度阀值，单位rad。在一次更新后，平台必须转动这个参数代表的值的角度后，才能再次更新地图。 -->   
-    <param name="map_update_angle_thresh" value="0.5" />  
-      
-    <!-- Advertising config -->   
-    <!-- Map update parameters --> 
-    <param name="advertise_map_service" value="true"/>  
-    <!-- 订阅/scan的队列大小（buffer）。如果有日志回放速度大于实际速度，那这个值应该被设的很高，例如 50。 --> 
-    <param name="scan_subscriber_queue_size" value="5"/> 
-    <!-- 主题名称 -->  
-    <param name="scan_topic" value="scan"/>  
-    </node>  
-     
-
-    <!-- Map update parameters base_to_laser_broadcaster节点 发布TF消息 发布的是base-laser的坐标转换-->  
-    <node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.25 0.25 0.3 0 0 0 /base_link /laser 100"/>  
-    
-    <!--启动可视化的界面-->   
-    <node pkg="rviz" type="rviz" name="rviz" args="home/wlh/temp/rviz/xhr_mapping.rviz"/>  
-    
-
+<!-- SlAM建图启动文件，获取激光数据和坐标转换，构建地图并发布-->
+<launch>
+    <!-- 启动激光雷达 这个文件其实也是启动了激光雷达的那个节点-->
+    <include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+    <!-- 启动hector_mapping节点用于建图-->
+    <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen">
+        <!--============================= 配置hector_mapping节点的各项参数=========================== -->
+        <!-- **************************************************Frame names **************************-->
+        <!-- 确定scanmatcher到map的转换是否发布到TF 选择发送 -->
+        <param name="pub_map_odom_transform" value="ture"/>
+        <!-- map坐标系的名称 -->
+        <param name="map_frame" value="map" />
+        <!--机器人基本坐标系的名称。这是用于定位和用于激光扫描数据的变换 -->
+        <param name="base_frame" value="base_link" />
+        <!-- 里程坐标系的名称 ><param name="odom_frame" value="odom" /-->
+        <param name="odom_frame" value="base_link" />
+        <!--************************************************** Tf use *******************************-->
+        <!--是否使用ＴＦ转换  这里的转化应该是map->base_link的转换-->
+        <param name="use_tf_scan_transformation" value="ture"/>
+        <param name="use_tf_pose_start_estimate" value="false"/>
+        <!--确定scanmatcher到map的转换是否发布到TF.坐标名通过tf_map_scanmatch_transform_frame_name参数确定 -->
+        <param name="pub_map_scanmatch_transform" value="false" />
+        <param name="tf_map_scanmatch_transform_frame_name" value="scanmat_frame" />
+        <!--************************************************** Map size / start point ********************-->
+        <!-- 地图分辨率[m]。 这是网格单元边缘的长度 -->
+        <param name="map_resolution" value="0.03"/>
+        <!-- 地图的大小[每个轴的单元格数量]。 地图是正方形的并且具有（map_size * map_size）网格单元 -->
+        <param name="map_size" value="512"/>
+        <!-- map的原点[0.0，1.0]在x轴上相对于网格图的位置。 0.5在中间 -->
+        <param name="map_start_x" value="0.3"/>
+        <!-- map的原点[0.0，1.0]在y轴上相对于网格图的位置。 0.5在中间 -->
+        <param name="map_start_y" value="0.5" />
+        <!-- 相对于激光扫描器框架的最小高度[m]，用于系统使用的激光扫描端点。 低于此值的扫描端点将被忽略 -->
+        <param name="laser_z_min_value" value = "-1.0" />
+        <!-- 相对于激光扫描器框架的最大高度[m]，用于系统使用的激光扫描端点。 高于此值的扫描端点将被忽略 -->
+        <param name="laser_z_max_value" value = "1.0" />
+        <!-- 地图多分辨率网格级数 -->
+        <param name="map_multi_res_levels" value="2" />
+        <!-- 地图发布周期 -->
+        <param name="map_pub_period" value="2" />
+        <!-- 系统使用的激光扫描端点的最小距离[m]。 距离此值更近的扫描端点将被忽略。 -->
+        <param name="laser_min_dist" value="0.2" />
+        <!-- 系统使用的激光扫描端点的最大距离[m]。 超出此值的扫描端点将被忽略。 -->
+        <param name="laser_max_dist" value="5.0" />
+        <!-- 通过ROS_INFO处理每个激光扫描的输出时序信息 -->
+        <param name="output_timing" value="false" />
+        <!--************************************************** Map update parameters **************************************************-->
+        <!-- 用于更新范围[0.0,1.0]中的空闲单元格的地图更新修改器。 值0.5表示没有变化。 -->
+        <param name="update_factor_free" value="0.4"/>
+        <!-- 用于在范围[0.0,1.0]中更新被占用单元的地图更新修改器。 值0.5表示没有变化。 -->
+        <param name="update_factor_occupied" value="0.7" />
+        <!-- 地图更新的长度阀值，单位m。在一次更新后，平台必须移动这个参数代表的值的距离后，才能再次更新地图。 -->
+        <param name="map_update_distance_thresh" value="0.2"/>
+        <!-- 地图更新的角度阀值，单位rad。在一次更新后，平台必须转动这个参数代表的值的角度后，才能再次更新地图。 -->
+        <param name="map_update_angle_thresh" value="0.5" />
+        <!-- Advertising config -->
+        <!-- Map update parameters -->
+        <param name="advertise_map_service" value="true"/>
+        <!-- 订阅/scan的队列大小（buffer）。如果有日志回放速度大于实际速度，那这个值应该被设的很高，例如 50。 -->
+        <param name="scan_subscriber_queue_size" value="5"/>
+        <!-- 主题名称 -->
+        <param name="scan_topic" value="scan"/>
+    </node>
+    <!-- Map update parameters base_to_laser_broadcaster节点 发布TF消息 发布的是base-laser的坐标转换-->
+    <node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.25 0.25 0.3 0 0 0 /base_link /laser 100"/>
+    <!--启动可视化的界面-->
+    <node pkg="rviz" type="rviz" name="rviz" args="home/wlh/temp/rviz/xhr_mapping.rviz"/>
     <!--include file="$(find hector_geotiff)/launch/geotiff_mapper_only.launch"/-->
-   
-<!--include file="$(find xhr_nav_pakge)/launch/car_serial.launch"/>
-    <node pkg="beginner_tutorials" type="talker" name="talker" output="screen">  </node>
+    <!--include file="$(find xhr_nav_pakge)/launch/car_serial.launch"/><node pkg="beginner_tutorials" type="talker" name="talker" output="screen"></node>
 -->
-
- 
- </launch>  
+</launch>  

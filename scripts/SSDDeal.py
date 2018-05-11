@@ -15,7 +15,8 @@ class SSDDeal:
         self.isess = tf.InteractiveSession()
         self.num_classes = 3
         self.ckpt_filename = '/home/hanxy/catkin_ws/src/icra_firefly/scripts/ckpts/model.ckpt-38804'
-        params = ssd_vgg_300.SSDNet.default_params._replace(num_classes=self.num_classes)
+        params = ssd_vgg_300.SSDNet.default_params._replace(
+            num_classes=self.num_classes)
         ssd = ssd_vgg_300.SSDNet(params)
         self.net_shape = (300, 300)
         self.img_input = tf.placeholder(tf.uint8, shape=(None, None, 3))
@@ -47,7 +48,8 @@ class SSDDeal:
         rbboxes = np_methods.bboxes_clip(rbbox_img, rbboxes)
         rclasses, rscores, rbboxes = np_methods.bboxes_sort(rclasses, rscores, rbboxes,
                                                             top_k=400)
-        rclasses, rscores, rbboxes = np_methods.bboxes_nms(rclasses, rscores, rbboxes, nms_threshold=nms_threshold)
+        rclasses, rscores, rbboxes = np_methods.bboxes_nms(
+            rclasses, rscores, rbboxes, nms_threshold=nms_threshold)
         # Resize bboxes to original image shape.
         rbboxes = np_methods.bboxes_resize(rbbox_img, rbboxes)
         return rclasses, rscores, rbboxes
@@ -84,7 +86,8 @@ def bboxes_draw_on_img(img, classes, scores, bboxes, colors, thickness=2):
 
 if __name__ == '__main__':
     ssd = SSDDeal()
-    colors_tableau = [(255, 255, 255), (31, 119, 180), (174, 199, 232), (255, 127, 14)]
+    colors_tableau = [(255, 255, 255), (31, 119, 180),
+                      (174, 199, 232), (255, 127, 14)]
     for xstep in range(300, 40000):
         num = str(xstep)
         num = num.zfill(4)
@@ -94,6 +97,7 @@ if __name__ == '__main__':
 
         # Draw results.
         img_bboxes = np.copy(img)
-        bboxes_draw_on_img(img_bboxes, rclasses, rscores, rbboxes, colors_tableau, thickness=2)
+        bboxes_draw_on_img(img_bboxes, rclasses, rscores,
+                           rbboxes, colors_tableau, thickness=2)
         cv2.imshow("xx", img_bboxes)
         cv2.waitKey(20)

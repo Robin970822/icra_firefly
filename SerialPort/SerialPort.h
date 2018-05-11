@@ -13,19 +13,20 @@
 #include <sys/ioctl.h>
 class SerialPort
 {
-	public:
-		SerialPort();
-		~SerialPort();
-		bool init_8n1(const char portName[]);
-		bool openPort(int speed);
-		bool closePort();
-		int writeData(const char *send_buf,int data_len);
-		int readData(char* rxbuff, int maxlength);
-		void clearPort();
-		bool isOpen();
-		char getlow(int str);
-		char gethigh(int str);
-	private:
-   		int fd;
-		char* portname;
+  public:
+	SerialPort();
+	~SerialPort();
+	bool init_8n1(const char portName[]);
+	bool openPort(int speed);
+	bool closePort();
+	int writeData(const char *send_buf, int data_len);
+	int readData(char *rxbuff, int maxlength);
+	void clearPort();
+	bool isOpen();
+	char getlow(int str);
+	char gethigh(int str);
+
+  private:
+	int fd;
+	char *portname;
 };

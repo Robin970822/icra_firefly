@@ -33,8 +33,8 @@
 #
 # Revision $Id$
 
-## Simple talker demo that published std_msgs/Strings messages
-## to the 'chatter' topic
+# Simple talker demo that published std_msgs/Strings messages
+# to the 'chatter' topic
 
 import rospy
 from std_msgs.msg import String
@@ -44,7 +44,7 @@ from geometry_msgs.msg import Twist
 def talker():
     cmd_pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
     rospy.init_node('fake_talker', anonymous=True)
-    rate = rospy.Rate(50) # 100hz
+    rate = rospy.Rate(50)  # 100hz
     while not rospy.is_shutdown():
         fake_cmd = Twist()
         fake_cmd.linear.x = 1.0
