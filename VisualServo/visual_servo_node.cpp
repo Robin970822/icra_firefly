@@ -72,8 +72,8 @@ void VisualServo::ArmorDetectionCallback(const icra_firefly::ArmorDetection &arm
         ROS_INFO("P:%lf I:%lf D:%lf", PID_u_d.kp, PID_u_d.ki, PID_u_d.kd);
 
         icra_firefly::GimbalControl gimbal;
-        gimbal.u_d = PID_u_d.uk;
-        gimbal.r_l = PID_r_l.uk;
+        gimbal.pitch = PID_u_d.uk;
+        gimbal.yaw = PID_r_l.uk;
         gim_ctrl_pub.publish(gimbal);
         // MV.Up_Down(PID_u_d.uk);
         // MV.Right_Left_Rotation(-PID_r_l.uk);
