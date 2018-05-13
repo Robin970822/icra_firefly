@@ -23,11 +23,11 @@ void CmdVelCallback(const geometry_msgs::Twist &cmd_vel)
 
         ros::param::param("~linear_x_coef", linear_x_coef, 1.0);
         ros::param::param("~linear_y_coef", linear_y_coef, 0.0);
-        ros::param::param("~angular_z_coef", angular_z_coef, 1.0);
+        ros::param::param("~angular_z_coef", angular_z_coef, -1.0);
 
-        double x = linear_x * linear_x_coef * 1000;
-        double y = linear_y * linear_y_coef * 1000;
-        double z = angular_z * angular_z_coef * 180.0 / PI;
+        double x = linear_x * linear_x_coef;
+        double y = linear_y * linear_y_coef;
+        double z = angular_z * angular_z_coef;
         ROS_INFO("linear x: %lf linear y: %lf angular z: %lf", x, y, z);
 
         MV.Forward_Back(x);
@@ -50,6 +50,7 @@ void GimbalCallback(const icra_firefly::GimbalControl &gimbal)
 
     MV.Up_Down(u_d);
     MV.Right_Left(r_l);
+    ROS_INFO("pitch: %lf yaw: %lf", u_d, r_l);
 
     mutex_send.lock();
     if (MV.Send_Message() == false)

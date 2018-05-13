@@ -12,13 +12,13 @@ def talker():
         gimbal_cmd = GimbalControl()
         line = raw_input(">")
         if(line == 'o'):
-            gimbal_cmd.pitch = 0.1
+            gimbal_cmd.pitch = 10.0
         if(line == 'l'):
-            gimbal_cmd.pitch = -0.1
+            gimbal_cmd.pitch = -10.0
         if(line == 'j'):
-            gimbal_cmd.yaw = -0.1
+            gimbal_cmd.yaw = -10.0
         if(line == 'k'):
-            gimbal_cmd.yaw = 0.1
+            gimbal_cmd.yaw = 10.0
         gimbal_pub.publish(gimbal_cmd)
         rate.sleep()
 
