@@ -36,7 +36,7 @@ find_package(catkin REQUIRED COMPONENTS
  add_message_files(
    FILES
    ArmorDetection.msg
-   GimbalControl.msg
+   EnemyPos.msg
  )
 
 ## Generate services in the 'srv' folder
