@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Simple talker demo that published icra_firefly/ArmorDetection messages
 # to the 'armor_detection
 

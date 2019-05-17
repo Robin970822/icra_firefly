@@ -1,4 +1,4 @@
-#!
+#!/usr/bin/env python
 import rospy
 from std_msgs.msg import UInt8
 
@@ -10,7 +10,7 @@ def talker():
     while not rospy.is_shutdown():
         line = raw_input(">")
         if(line == 'r'):
-            shoot_cmd = 1;
+            shoot_cmd = 1
         shoot_pub.publish(shoot_cmd)
         rate.sleep()
 

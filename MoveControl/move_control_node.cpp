@@ -62,7 +62,7 @@ void GimbalCallback(const icra_firefly::GimbalControl &gimbal)
 
 int main(int argc, char **argv)
 {
-    printf("move control node statr\n");
+    printf("move control node start\n");
     // 初始化ROS当前节点为move_control_contr
     ros::init(argc, argv, "move_control_node");
     ros::NodeHandle nh;

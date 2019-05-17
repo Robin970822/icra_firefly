@@ -1,4 +1,4 @@
-#!
+#!/usr/bin/env python
 import rospy
 from messages.msg import EnemyPos
 

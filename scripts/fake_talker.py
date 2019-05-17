@@ -1,4 +1,4 @@
-#!
+#!/usr/bin/env python
 import rospy
 from std_msgs.msg import String
 from geometry_msgs.msg import Twist
@@ -10,7 +10,7 @@ def talker():
     rate = rospy.Rate(50)  # 100hz
     while not rospy.is_shutdown():
         fake_cmd = Twist()
-        fake_cmd.linear.z = 1.0
+        fake_cmd.linear.z = 0.0
         cmd_pub.publish(fake_cmd)
         rate.sleep()
 
